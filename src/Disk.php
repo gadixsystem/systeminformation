@@ -4,63 +4,87 @@ namespace gadixsystem\systeminformation;
 
 class Disk extends SystemInformation
 {
+    private string $folder;
+
     /**
-     * Construct the format of returns
-     * @param $diskName string
+     * @param string $folder
+     * @param bool $round
      */
-    public function __construct($folder = '/')
-    {
-        parent::__construct();
-        $this->format = '--' . config('systeminformation.unit');
+    public function __construct(
+        string $folder = '/',
+        bool $round = true
+    ) {
         $this->folder = $folder;
+        parent::__construct($round);
     }
 
     /**
-     * @return string
+     * @return false|float|null
      */
     public function getFree()
     {
-        return disk_free_space($this->folder);
+        try {
+            return disk_free_space($this->folder);
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
-     * @return string
+     * @return false|float|null
      */
     public function getUsed()
     {
-        return disk_total_space($this->folder) - disk_free_space($this->folder);
+        try {
+            return disk_total_space($this->folder) - disk_free_space($this->folder);
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
-     * @return string
+     * @return false|float|null
      */
     public function getTotal()
     {
-        return disk_total_space($this->folder);
+        try {
+            return disk_total_space($this->folder);
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
-     * @return string
+     * @return float|int|null
      */
     public function getFreePercentage()
     {
-        $result = (disk_free_space($this->folder) * 100) / disk_total_space($this->folder);
-        if ($this->round && is_numeric($result)) {
-            return round($result, 2);
+        try {
+            $result = (disk_free_space($this->folder) * 100) / disk_total_space($this->folder);
+            if ($this->round && is_numeric($result)) {
+                return round($result, 2);
+            }
+            return $result;
+        } catch (\Throwable $throwable) {
+            return null;
         }
-        return $result;
     }
 
     /**
-     * @return string
+     * @return float|int
      */
     public function getUsedPercentage()
     {
-        $result = ((disk_total_space($this->folder) - disk_free_space($this->folder)) * 100)
-            / disk_total_space($this->folder);
-        if ($this->round && is_numeric($result)) {
-            return round($result, 2);
+        try {
+            $result = ((disk_total_space($this->folder) - disk_free_space($this->folder)) * 100)
+                / disk_total_space($this->folder);
+            if ($this->round && is_numeric($result)) {
+                return round($result, 2);
+            }
+
+            return $result;
+        } catch (\Throwable $throwable) {
+            return null;
         }
-        return $result;
     }
 }

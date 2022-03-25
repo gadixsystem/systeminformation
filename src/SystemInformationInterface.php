@@ -6,37 +6,42 @@ interface SystemInformationInterface
 {
     /**
      * Return free
-     * @return string
+     * @return mixed
      */
     public function getFree();
 
     /**
      * Return used
-     * @return string
+     * @return mixed
      */
     public function getUsed();
 
     /**
      * Return total used
-     * @return string
+     * @return mixed
      */
     public function getTotal();
 
     /**
      * Return Percentage of free
-     * @return string
+     * @return mixed
      */
     public function getFreePercentage();
 
     /**
      * Return Percentage of used
-     * @return string
+     * @return mixed
      */
     public function getUsedPercentage();
 
     /**
      * Return the report of proccess
-     * @return arr
+     * @return mixed
      */
     public function getReport();
+
+    /**
+     * @return SystemReport
+     */
+    public function getSystemReport(): SystemReport;
 }

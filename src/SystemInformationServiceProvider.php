@@ -3,7 +3,6 @@
 namespace gadixsystem\systemInformation;
 
 use Illuminate\Support\ServiceProvider;
-use gadixsystem\systeminformation\SystemInformation;
 
 class SystemInformationServiceProvider extends ServiceProvider
 {

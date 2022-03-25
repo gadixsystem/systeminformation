@@ -4,61 +4,86 @@ namespace gadixsystem\systeminformation;
 
 class Memory extends SystemInformation
 {
+    private string $memoryType;
+
     /**
-     * Construct the format of returns
-     * @param $memoryType string
+     * @param string $memoryType
+     * @param string $format
      */
-    public function __construct($memoryType = 'Mem')
-    {
-        parent::__construct();
+    public function __construct(
+        string $memoryType = 'Mem',
+        string $format = 'h'
+    ) {
+        parent::__construct(true, $format);
         $this->memoryType = $memoryType;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFree()
+    public function getFree(): ?string
     {
-        return exec("free " . $this->format . " | grep " . $this->memoryType . "| awk '{print $4}'");
+        try {
+            return exec("free " . $this->format . " | grep " . $this->memoryType . "| awk '{print $4}'");
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUsed()
+    public function getUsed(): ?string
     {
-        return exec("free " . $this->format . " | grep " . $this->memoryType . "| awk '{print $3}'");
+        try {
+            return exec("free " . $this->format . " | grep " . $this->memoryType . "| awk '{print $3}'");
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTotal()
+    public function getTotal(): ?string
     {
-        return exec("free " . $this->format . " | grep " . $this->memoryType . "| awk '{print $2}'");
+        try {
+            return exec("free " . $this->format . " | grep " . $this->memoryType . "| awk '{print $2}'");
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
-     * @return string
+     * @return string|bool|float|null
      */
     public function getFreePercentage()
     {
-        $result = exec("free | grep " . $this->memoryType . "| awk '{print $4/$2 * 100.0}'");
-        if ($this->round && is_numeric($result)) {
-            return round($result, 2);
+        try {
+            $result = exec("free | grep " . $this->memoryType . "| awk '{print $4/$2 * 100.0}'");
+            if ($this->round && is_numeric($result)) {
+                return round($result, 2);
+            }
+
+            return $result;
+        } catch (\Throwable $throwable) {
+            return null;
         }
-        return $result;
     }
 
     /**
-     * @return string
+     * @return string|bool|float|null
      */
     public function getUsedPercentage()
     {
-        $result = exec("free | grep " . $this->memoryType . "| awk '{print $3/$2 * 100.0}'");
-        if ($this->round && is_numeric($result)) {
-            return round($result, 2);
+        try {
+            $result = exec("free | grep " . $this->memoryType . "| awk '{print $3/$2 * 100.0}'");
+            if ($this->round && is_numeric($result)) {
+                return round($result, 2);
+            }
+            return $result;
+        } catch (\Throwable $throwable) {
+            return null;
         }
-        return $result;
     }
 }
