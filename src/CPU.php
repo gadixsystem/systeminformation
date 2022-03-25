@@ -2,22 +2,26 @@
 
 namespace gadixsystem\systeminformation;
 
-class CPU
+class CPU extends SystemInformation
 {
     /**
-     * @return string
+     * @return array|false|null
      */
     public function getAvg()
     {
-        return sys_getloadavg();
+        try {
+            return sys_getloadavg();
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
     /**
      * Official Php contribution
      * https://www.php.net/manual/es/function.sys-getloadavg.php#118673
-     * @return array
+     * @return array|null
      */
-    public function getServerLoad()
+    public function getServerLoad(): ?array
     {
         if (is_readable("/proc/stat")) {
             $stats = @file_get_contents("/proc/stat");
@@ -35,7 +39,8 @@ class CPU
                     $statLineData = explode(" ", trim($statLine));
 
                     // Found!
-                    if ((count($statLineData) >= 5) &&
+                    if (
+                        (count($statLineData) >= 5) &&
                         ($statLineData[0] == "cpu")
                     ) {
                         return array(

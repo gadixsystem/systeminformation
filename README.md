@@ -1,6 +1,12 @@
 # System Informatiom
 Simple package to get information about your Linux Os using PHP.
 
+## Testing
+From your command line run:
+```shell
+composer test
+```
+
 ## **Installation:**
 
 From your command line run: 
@@ -10,7 +16,7 @@ From your command line run:
 **Register the provider**
 Laravel Version <= 5.8
 In config/app.php add the follow line:
-```
+```PHP
  'providers' => [
        
         //System Information

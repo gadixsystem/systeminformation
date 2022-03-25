@@ -4,8 +4,13 @@ namespace gadixsystem\systeminformation;
 
 class SystemInformation implements SystemInformationInterface
 {
-    public function __construct($round = true, $format = 'h')
-    {
+    protected bool $round;
+    protected string $format;
+
+    public function __construct(
+        bool $round = true,
+        string $format = 'h'
+    ) {
         $this->round = $round;
         $this->format = '--' . $format;
         if (function_exists('config')) {
@@ -15,33 +20,34 @@ class SystemInformation implements SystemInformationInterface
 
     public function getFree()
     {
-        //
+        return null;
     }
 
     public function getUsed()
     {
-        //
+        return null;
     }
 
     public function getTotal()
     {
-        //
+        return null;
     }
 
     public function getFreePercentage()
     {
-        //
+        return null;
     }
 
     public function getUsedPercentage()
     {
-        //
+        return null;
     }
 
     /**
-     * @return array
+     * You should use getSystemReport instead of this method.
+     * @deprecated
      */
-    public function getReport()
+    public function getReport(): array
     {
         $freePercentage = $this->getFreePercentage();
         $usedPercentage = $this->getUsedPercentage();
@@ -59,5 +65,26 @@ class SystemInformation implements SystemInformationInterface
             'usedPercentage' => $usedPercentage,
             'bufferPercentage' => $buffer
         ];
+    }
+
+    public function getSystemReport(): SystemReport
+    {
+        $freePercentage = $this->getFreePercentage();
+        $usedPercentage = $this->getUsedPercentage();
+        $buffer = '0';
+        if (is_numeric($freePercentage) && is_numeric($usedPercentage)) {
+            if ($freePercentage + $usedPercentage != 100) {
+                $buffer = 100 - $freePercentage - $usedPercentage;
+            }
+        }
+
+        return new SystemReport(
+            (string) $this->getFree(),
+            (string) $this->getUsed(),
+            (string) $this->getTotal(),
+            (string) $freePercentage,
+            (string) $usedPercentage,
+            (string) $buffer
+        );
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 // Gadixsystem System Information Config
 
 return [
